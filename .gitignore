@@ -1,0 +1,202 @@
+# =============================================================================
+# iBanking Tuition System - .gitignore
+# =============================================================================
+
+# Node.js Dependencies
+# -----------------------------------------------------------------------------
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+package-lock.json
+yarn.lock
+
+# Environment Variables & Configuration
+# -----------------------------------------------------------------------------
+.env
+.env.local
+.env.development
+.env.test
+.env.production
+.env.staging
+config/local.js
+config/production.js
+
+# Logs & Debug Files
+# -----------------------------------------------------------------------------
+logs/
+*.log
+*.log.*
+lerna-debug.log*
+.npm
+.eslintcache
+
+# Runtime & Temporary Files
+# -----------------------------------------------------------------------------
+.nyc_output
+.grunt
+lib-cov
+coverage/
+.coverage
+.lcov
+*.lcov
+*.pid
+*.seed
+*.pid.lock
+.lock-wscript
+build/Release
+
+# Operating System Files
+# -----------------------------------------------------------------------------
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+Icon
+._*
+.DocumentRevisions-V100
+.fseventsd
+.Spotlight-V100
+.TemporaryItems
+.Trashes
+.VolumeIcon.icns
+.com.apple.timemachine.donotpresent
+
+# Windows
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+ehthumbs_vista.db
+*.stackdump
+[Dd]esktop.ini
+$RECYCLE.BIN/
+*.cab
+*.msi
+*.msix
+*.msm
+*.msp
+*.lnk
+
+# Linux
+*~
+.fuse_hidden*
+.directory
+.Trash-*
+.nfs*
+
+# IDE & Editor Files
+# -----------------------------------------------------------------------------
+# Visual Studio Code
+.vscode/
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+*.code-workspace
+
+# JetBrains IDEs
+.idea/
+*.swp
+*.swo
+*~
+
+# Sublime Text
+*.tmlanguage.cache
+*.tmPreferences.cache
+*.stTheme.cache
+*.sublime-workspace
+*.sublime-project
+
+# Vim
+[._]*.s[a-v][a-z]
+[._]*.sw[a-p]
+[._]s[a-rt-v][a-z]
+[._]ss[a-gi-z]
+[._]sw[a-p]
+
+# Build & Distribution
+# -----------------------------------------------------------------------------
+dist/
+build/
+.next/
+out/
+.nuxt/
+.vuepress/dist/
+.serverless/
+.fusebox/
+.dynamodb/
+
+# Database & Docker
+# -----------------------------------------------------------------------------
+# MySQL Data
+mysql_data/
+*.sql
+*.dump
+*.backup
+
+# Docker
+.dockerignore
+docker-compose.override.yml
+.docker/
+
+# Testing & Coverage
+# -----------------------------------------------------------------------------
+coverage/
+.nyc_output/
+.coverage/
+*.lcov
+test-results/
+junit.xml
+
+# Security & Sensitive Files
+# -----------------------------------------------------------------------------
+# SSL Certificates
+*.pem
+*.key
+*.crt
+*.p12
+*.pfx
+
+# API Keys & Secrets
+secrets/
+.secrets/
+*.secret
+
+# Banking & Financial Data (Important for iBanking system)
+# -----------------------------------------------------------------------------
+# Transaction logs
+transactions/
+transaction_logs/
+payment_logs/
+*.transaction
+*.payment
+
+# User data
+user_data/
+student_data/
+*.userdata
+
+# OTP & Authentication
+otp_codes/
+auth_tokens/
+*.otp
+
+# Backup Files
+# -----------------------------------------------------------------------------
+*.bak
+*.backup
+*.old
+*.orig
+*.tmp
+*.temp
+
+# Miscellaneous
+# -----------------------------------------------------------------------------
+.sass-cache/
+.connect.sid
+.cache/
+.parcel-cache/
+.eslintcache
+.stylelintcache
+*.tgz
+*.tar.gz

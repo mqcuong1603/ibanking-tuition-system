@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>iBanking Tuition Payment System</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .container {
+        background: white;
+        padding: 2rem;
+        border-radius: 10px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        width: 100%;
+        max-width: 400px;
+      }
+
+      .logo {
+        text-align: center;
+        margin-bottom: 2rem;
+      }
+
+      .logo h1 {
+        color: #333;
+        font-size: 1.8rem;
+        margin-bottom: 0.5rem;
+      }
+
+      .logo p {
+        color: #666;
+        font-size: 0.9rem;
+      }
+
+      .form-group {
+        margin-bottom: 1rem;
+      }
+
+      label {
+        display: block;
+        margin-bottom: 0.5rem;
+        color: #333;
+        font-weight: 500;
+      }
+
+      input {
+        width: 100%;
+        padding: 0.75rem;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        font-size: 1rem;
+        transition: border-color 0.3s;
+      }
+
+      input:focus {
+        outline: none;
+        border-color: #667eea;
+      }
+
+      .btn {
+        width: 100%;
+        padding: 0.75rem;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border: none;
+        border-radius: 5px;
+        font-size: 1rem;
+        cursor: pointer;
+        transition: transform 0.2s;
+      }
+
+      .btn:hover {
+        transform: translateY(-1px);
+      }
+
+      .alert {
+        padding: 0.75rem;
+        margin: 1rem 0;
+        border-radius: 5px;
+        display: none;
+      }
+
+      .alert.success {
+        background: #d4edda;
+        color: #155724;
+        border: 1px solid #c3e6cb;
+      }
+
+      .alert.error {
+        background: #f8d7da;
+        color: #721c24;
+        border: 1px solid #f5c6cb;
+      }
+
+      .page {
+        display: none;
+      }
+
+      .page.active {
+        display: block;
+      }
+
+      .back-btn {
+        background: #6c757d;
+        margin-bottom: 1rem;
+      }
+
+      .info-box {
+        background: #f8f9fa;
+        padding: 1rem;
+        border-radius: 5px;
+        margin: 1rem 0;
+        border-left: 4px solid #667eea;
+      }
+
+      .transaction-item {
+        background: #f8f9fa;
+        padding: 1rem;
+        margin: 0.5rem 0;
+        border-radius: 5px;
+        border-left: 4px solid #28a745;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <!-- Login Page -->
+      <div id="loginPage" class="page active">
+        <div class="logo">
+          <h1>iBanking TDTU</h1>
+          <p>Tuition Payment System</p>
+        </div>
+
+        <form id="loginForm">
+          <div class="form-group">
+            <label for="username">Username:</label>
+            <input type="text" id="username" required />
+          </div>
+
+          <div class="form-group">
+            <label for="password">Password:</label>
+            <input type="password" id="password" required />
+          </div>
+
+          <button type="submit" class="btn">Login</button>
+        </form>
+
+        <div id="loginAlert" class="alert"></div>
+
+        <div class="info-box">
+          <strong>Demo Accounts:</strong><br />
+          Username: user1, Password: 123456<br />
+          Username: user2, Password: 123456
+        </div>
+      </div>
+
+      <!-- Dashboard Page -->
+      <div id="dashboardPage" class="page">
+        <div class="logo">
+          <h1>Dashboard</h1>
+          <p id="welcomeMessage">Welcome back!</p>
+        </div>
+
+        <div id="userInfo" class="info-box">
+          <!-- User info will be loaded here -->
+        </div>
+
+        <button
+          onclick="showPaymentPage()"
+          class="btn"
+          style="margin-bottom: 1rem"
+        >
+          Pay Tuition
+        </button>
+        <button
+          onclick="showHistoryPage()"
+          class="btn"
+          style="margin-bottom: 1rem"
+        >
+          Transaction History
+        </button>
+        <button onclick="logout()" class="btn" style="background: #dc3545">
+          Logout
+        </button>
+      </div>
+
+      <!-- Payment Page -->
+      <div id="paymentPage" class="page">
+        <button onclick="showDashboard()" class="btn back-btn">
+          ← Back to Dashboard
+        </button>
+
+        <div class="logo">
+          <h1>Pay Tuition</h1>
+        </div>
+
+        <form id="paymentForm">
+          <div class="form-group">
+            <label for="studentId">Student ID:</label>
+            <input
+              type="text"
+              id="studentId"
+              placeholder="e.g., 52100001"
+              required
+            />
+          </div>
+
+          <button type="submit" class="btn">Check & Pay</button>
+        </form>
+
+        <div id="paymentAlert" class="alert"></div>
+        <div id="studentInfo"></div>
+      </div>
+
+      <!-- OTP Page -->
+      <div id="otpPage" class="page">
+        <div class="logo">
+          <h1>Enter OTP</h1>
+          <p>Check your email for the verification code</p>
+        </div>
+
+        <form id="otpForm">
+          <div class="form-group">
+            <label for="otpCode">OTP Code:</label>
+            <input
+              type="text"
+              id="otpCode"
+              maxlength="6"
+              placeholder="123456"
+              required
+            />
+          </div>
+
+          <button type="submit" class="btn">Confirm Payment</button>
+          <button
+            type="button"
+            onclick="resendOTP()"
+            class="btn"
+            style="background: #6c757d; margin-top: 0.5rem"
+          >
+            Resend OTP
+          </button>
+        </form>
+
+        <div id="otpAlert" class="alert"></div>
+      </div>
+
+      <!-- History Page -->
+      <div id="historyPage" class="page">
+        <button onclick="showDashboard()" class="btn back-btn">
+          ← Back to Dashboard
+        </button>
+
+        <div class="logo">
+          <h1>Transaction History</h1>
+        </div>
+
+        <div id="transactionList">
+          <!-- Transaction history will be loaded here -->
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const API_BASE = "/api";
+      let authToken = localStorage.getItem("authToken");
+      let currentUser = null;
+      let currentTransaction = null;
+
+      // Check if user is already logged in
+      if (authToken) {
+        loadUserProfile();
+      }
+
+      // Login form handler
+      document
+        .getElementById("loginForm")
+        .addEventListener("submit", async (e) => {
+          e.preventDefault();
+
+          const username = document.getElementById("username").value;
+          const password = document.getElementById("password").value;
+
+          try {
+            const response = await fetch(`${API_BASE}/auth/login`, {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({ username, password }),
+            });
+
+            const data = await response.json();
+
+            if (data.success) {
+              authToken = data.data.token;
+              localStorage.setItem("authToken", authToken);
+              currentUser = data.data.user;
+              showAlert("loginAlert", "Login successful!", "success");
+              setTimeout(() => showDashboard(), 1000);
+            } else {
+              showAlert("loginAlert", data.message, "error");
+            }
+          } catch (error) {
+            showAlert(
+              "loginAlert",
+              "Connection error. Please try again.",
+              "error"
+            );
+          }
+        });
+
+      // Payment form handler
+      document
+        .getElementById("paymentForm")
+        .addEventListener("submit", async (e) => {
+          e.preventDefault();
+
+          const studentId = document.getElementById("studentId").value;
+
+          try {
+            const response = await fetch(`${API_BASE}/transactions/create`, {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${authToken}`,
+              },
+              body: JSON.stringify({ student_id: studentId }),
+            });
+
+            const data = await response.json();
+
+            if (data.success) {
+              currentTransaction = data.data.transaction_id;
+              showAlert("paymentAlert", data.message, "success");
+
+              // Show student info
+              const studentInfo = data.data.student_info;
+              document.getElementById("studentInfo").innerHTML = `
+                        <div class="info-box">
+                            <strong>Student Information:</strong><br>
+                            ID: ${studentInfo.student_id}<br>
+                            Name: ${studentInfo.full_name}<br>
+                            Tuition: ${studentInfo.tuition_amount.toLocaleString(
+                              "vi-VN"
+                            )} VND
+                        </div>
+                    `;
+
+              setTimeout(() => showOTPPage(), 2000);
+            } else {
+              showAlert("paymentAlert", data.message, "error");
+            }
+          } catch (error) {
+            showAlert(
+              "paymentAlert",
+              "Connection error. Please try again.",
+              "error"
+            );
+          }
+        });
+
+      // OTP form handler
+      document
+        .getElementById("otpForm")
+        .addEventListener("submit", async (e) => {
+          e.preventDefault();
+
+          const otpCode = document.getElementById("otpCode").value;
+
+          try {
+            const response = await fetch(`${API_BASE}/transactions/confirm`, {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${authToken}`,
+              },
+              body: JSON.stringify({
+                transaction_id: currentTransaction,
+                otp_code: otpCode,
+              }),
+            });
+
+            const data = await response.json();
+
+            if (data.success) {
+              showAlert(
+                "otpAlert",
+                "Payment completed successfully!",
+                "success"
+              );
+              setTimeout(() => {
+                loadUserProfile();
+                showDashboard();
+              }, 2000);
+            } else {
+              showAlert("otpAlert", data.message, "error");
+            }
+          } catch (error) {
+            showAlert(
+              "otpAlert",
+              "Connection error. Please try again.",
+              "error"
+            );
+          }
+        });
+
+      async function loadUserProfile() {
+        try {
+          const response = await fetch(`${API_BASE}/auth/profile`, {
+            headers: {
+              Authorization: `Bearer ${authToken}`,
+            },
+          });
+
+          const data = await response.json();
+
+          if (data.success) {
+            currentUser = data.data;
+            document.getElementById(
+              "welcomeMessage"
+            ).textContent = `Welcome, ${currentUser.full_name}!`;
+            document.getElementById("userInfo").innerHTML = `
+                        <strong>Account Information:</strong><br>
+                        Name: ${currentUser.full_name}<br>
+                        Email: ${currentUser.email}<br>
+                        Balance: ${currentUser.balance.toLocaleString(
+                          "vi-VN"
+                        )} VND
+                    `;
+            showDashboard();
+          } else {
+            logout();
+          }
+        } catch (error) {
+          console.error("Error loading profile:", error);
+          logout();
+        }
+      }
+
+      async function loadTransactionHistory() {
+        try {
+          const response = await fetch(`${API_BASE}/transactions/history`, {
+            headers: {
+              Authorization: `Bearer ${authToken}`,
+            },
+          });
+
+          const data = await response.json();
+
+          if (data.success) {
+            const transactions = data.data;
+            const listHtml =
+              transactions.length > 0
+                ? transactions
+                    .map(
+                      (t) => `
+                            <div class="transaction-item">
+                                <strong>Transaction #${t.id}</strong><br>
+                                Student: ${t.student_name}<br>
+                                Amount: ${t.amount.toLocaleString(
+                                  "vi-VN"
+                                )} VND<br>
+                                Status: ${t.status}<br>
+                                Date: ${new Date(t.created_at).toLocaleString()}
+                            </div>
+                        `
+                    )
+                    .join("")
+                : "<p>No transactions found.</p>";
+
+            document.getElementById("transactionList").innerHTML = listHtml;
+          } else {
+            document.getElementById("transactionList").innerHTML =
+              "<p>Error loading transactions.</p>";
+          }
+        } catch (error) {
+          document.getElementById("transactionList").innerHTML =
+            "<p>Connection error.</p>";
+        }
+      }
+
+      async function resendOTP() {
+        try {
+          const response = await fetch(`${API_BASE}/otp/resend`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${authToken}`,
+            },
+            body: JSON.stringify({ transaction_id: currentTransaction }),
+          });
+
+          const data = await response.json();
+          showAlert(
+            "otpAlert",
+            data.message,
+            data.success ? "success" : "error"
+          );
+        } catch (error) {
+          showAlert("otpAlert", "Connection error. Please try again.", "error");
+        }
+      }
+
+      function showAlert(elementId, message, type) {
+        const alertElement = document.getElementById(elementId);
+        alertElement.textContent = message;
+        alertElement.className = `alert ${type}`;
+        alertElement.style.display = "block";
+
+        setTimeout(() => {
+          alertElement.style.display = "none";
+        }, 5000);
+      }
+
+      function showPage(pageId) {
+        document.querySelectorAll(".page").forEach((page) => {
+          page.classList.remove("active");
+        });
+        document.getElementById(pageId).classList.add("active");
+      }
+
+      function showDashboard() {
+        showPage("dashboardPage");
+      }
+
+      function showPaymentPage() {
+        showPage("paymentPage");
+        document.getElementById("studentInfo").innerHTML = "";
+      }
+
+      function showOTPPage() {
+        showPage("otpPage");
+        document.getElementById("otpCode").value = "";
+      }
+
+      function showHistoryPage() {
+        showPage("historyPage");
+        loadTransactionHistory();
+      }
+
+      function logout() {
+        localStorage.removeItem("authToken");
+        authToken = null;
+        currentUser = null;
+        currentTransaction = null;
+        showPage("loginPage");
+        document.getElementById("loginForm").reset();
+      }
+    </script>
+  </body>
+</html>
