@@ -22,7 +22,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // Serve static files from frontend directory
-app.use(express.static(path.join(__dirname, "../public")));
+app.use(express.static(path.join(__dirname, "../../frontend")));
 
 // API routes
 app.use("/api", routes);
@@ -32,9 +32,15 @@ app.get("/health", (req, res) => {
   res.json({ status: "OK", timestamp: new Date() });
 });
 
-// Serve frontend for all non-API routes (SPA support)
-app.get(/^(?!\/api).*/, (req, res) => {
-  res.sendFile(path.join(__dirname, "../public/index.html"));
+// Catch-all handler for SPA support (must be last)
+app.use((req, res, next) => {
+  // Skip if it's an API route
+  if (req.path.startsWith("/api")) {
+    return res.status(404).json({ error: "API endpoint not found" });
+  }
+
+  // Serve index.html for all other routes (SPA support)
+  res.sendFile(path.join(__dirname, "../../frontend/index.html"));
 });
 
 // Error handling middleware (must be last)
